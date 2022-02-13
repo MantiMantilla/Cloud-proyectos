@@ -156,7 +156,7 @@ class UnConcurso(Resource):
         db.session.commit()
         return 'Se borro exitosamente el concurso', 204
 
-# Metodos para voces 
+# Acciones GET/POST/PUT/DELETE Voces 
 class TodosLasVoces(Resource):
     def get(self):
         voces = Voces.query.all()        
