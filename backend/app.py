@@ -129,8 +129,8 @@ class UnConcurso(Resource):
             concurso.url = request.json['url']
         db.session.commit()
         return {'message':'El concurso se edito correctamente'}
-    def delete(self, id_evento):
-        concurso = Concursos.query.get_or_404(id_evento)
+    def delete(self, id_concurso):
+        concurso = Concursos.query.get_or_404(id_concurso)
         db.session.delete(concurso)
         db.session.commit()
         return 'Se borro exitosamente el concurso', 204
