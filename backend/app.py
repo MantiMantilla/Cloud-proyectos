@@ -100,7 +100,7 @@ class TodosLosConcursos(Resource):
                 url = url_concurso
         )
         db.session.add(nuevo_concurso)
-        db.commit()
+        db.session.commit()
         return {'message':'Concurso creado exitosamente.'}
 
 #class UnConcurso(Resource):
