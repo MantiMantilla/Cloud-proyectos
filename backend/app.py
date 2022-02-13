@@ -103,7 +103,10 @@ class TodosLosConcursos(Resource):
         db.session.commit()
         return {'message':'Concurso creado exitosamente.'}
 
-#class UnConcurso(Resource):
+class UnConcurso(Resource):
+    def get(self,id_concurso):
+        concurso = Concursos.query.get_or_404(id_concurso)
+        return concurso_schema.dump(concurso)
 
 # Endpoints Administrador
 api.add_resource(RegistrarAdministrador, '/administrador')
@@ -111,6 +114,7 @@ api.add_resource(ValidarAdministrador, '/validar_administrador')
 
 # Endpoints Concursos
 api.add_resource(TodosLosConcursos, '/concursos')
+api.add_resource(UnConcurso,'/concursos/<int:id_concurso>')
 
 
 @app.route("/")
