@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow  
 from flask_restful import Api, Resource
 from flask_cors import CORS
+from itsdangerous import json
 
 app = Flask(__name__)
 CORS(app)
@@ -52,7 +53,27 @@ class Concursos_Schema(ma.Schema):
 concurso_schema = Concursos_Schema()
 concursos_schema = Concursos_Schema(many = True)
 
-# API
+# Crear Clases y esquemas Voces
+class Voces(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    id_concurso = db.Column(db.Integer)
+    nombres = db.Column(db.String(50) )
+    apellidos = db.Column(db.String(50) )
+    correo = db.Column(db.String(50) )
+    path_original = db.Column(db.String(500) )
+    path_convertido = db.Column(db.String(500) )
+    observaciones = db.Column(db.String(500)) # Validar en el front max 500 caracteres
+    fecha_creacion = db.Column(db.Date)
+    estado = db.Column(db.Integer)
+
+class Voces_Schema(ma.Schema):
+    class Meta:
+        fields = ("id","id_concurso","nombres","apellidos","correo","path_original","path_convertido","observaciones","fecha_creacion","estado")
+
+voz_schema = Voces_Schema()
+voces_schema = Voces_Schema(many = True)
+
+# API----------------------------------------------------------------------------------------------------------------------------------------
 # creacion de Api Flask
 api = Api(app)
 
@@ -135,19 +156,81 @@ class UnConcurso(Resource):
         db.session.commit()
         return 'Se borro exitosamente el concurso', 204
 
+# Metodos para voces 
+class TodosLasVoces(Resource):
+    def get(self):
+        voces = Voces.query.all()        
+        return voces_schema.dump(voces)
+    
+    def post(self):
+        nueva_voz = Voces(
+                id_concurso = request.json['id_concurso'],
+                nombres = request.json['nombres'],
+                apellidos = request.json['apellidos'],
+                correo = request.json['correo'],
+                path_original = request.json['path_original'],
+                observaciones = request.json['observaciones'],
+                fecha_creacion = datetime.strptime(request.json['fecha_creacion'],"%d/%m/%Y"),
+                estado = 0 #se asegura que la voz no este procesada
+        )
+        db.session.add(nueva_voz)
+        db.session.commit()
+        return {'message':'Voz creada exitosamente.'}
+
+
+
+class UnaVoz(Resource):
+    def get(self,id_voz):
+        voz = Voces.query.get_or_404(id_voz)
+        return voz_schema.dump(voz)
+    
+    def put(self,id_voz):
+        voz = Voces.query.get_or_404(id_voz)
+        if 'id_concurso' in request.json:
+            voz.id_concurso = request.json['id_concurso']
+        if 'nombres' in request.json:
+            voz.nombres = request.json['nombres']
+        if 'apellidos' in request.json:
+            voz.apellidos = request.json['apellidos']
+        if 'correo' in request.json:
+            voz.correo = request['correo']
+        if 'path_original' in request.json:
+            voz.path_original = request.json['path_original']
+        if 'path_convertido' in request.json:
+            voz.path_convertido = request.json['path_convertido']
+        if 'observaciones' in request.json:
+            voz.observaciones = request.json['observaciones']
+        if 'fecha_creacion' in request.json:
+            voz.fecha_creacion = request.json['fecha_creacion']
+        if 'estado' in request.json:
+            voz.estado = request.json['estado']
+        db.session.commit()
+        return {'message':'La voz se edito correctamente'}
+    
+    def delete(self, id_voz):
+        voz = Concursos.query.get_or_404(id_voz)
+        db.session.delete(voz)
+        db.session.commit()
+        return 'La voz se borro exitosamente', 204
+
+
 # Endpoints Administrador
 api.add_resource(RegistrarAdministrador, '/administrador')
 api.add_resource(ValidarAdministrador, '/validar_administrador')
 
-# Endpoints Concursos
+# Endpoints Concursos---
 api.add_resource(TodosLosConcursos, '/concursos')
 api.add_resource(UnConcurso,'/concursos/<int:id_concurso>')
 
 
-@app.route("/")
+# Endpoint Voces
+api.add_resource(TodosLasVoces, '/voces')
+api.add_resource(UnaVoz,'/voces/<int:id_voz>')
+
+"""@app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
-
+"""
 
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0", port=8080)
