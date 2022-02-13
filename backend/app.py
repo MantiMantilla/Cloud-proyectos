@@ -17,7 +17,7 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
 
-# Crear Clases y esquemas
+# Crear Clases y esquemas Administrador
 class Administradores(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     nombres = db.Column(db.String(50) )
@@ -32,11 +32,31 @@ class Administrador_Schema(ma.Schema):
 administrador_schema = Administrador_Schema()
 administradores_schema = Administrador_Schema(many = True)
 
+# Crear Clases y esquemas Concursos
+class Concursos(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    id_admin = db.Column(db.Integer)
+    nombre = db.Column(db.String(50) )
+    path_banner = db.Column(db.String(500) )
+    fecha_inicio = db.Column(db.Date)
+    fecha_fin = db.Column(db.Date)
+    valor_premio = db.Column(db.String(20))
+    guion = db.Column(db.String(500))   # Validar max 500 aracteres en el front
+    recomendaciones = db.Column(db.String(500)) # Validar en el front
+    url = db.Column(db.String(250))
+
+class Concursos_Schema(ma.Schema):
+    class Meta:
+        fields = ("id","id_admin","nombre","path_banner","fecha_inicio","fecha_fin","valor_premio","guion","recomendaciones","url")
+
+concurso_schema = Concursos_Schema()
+concursos_schema = Concursos_Schema(many = True)
+
 # API
 # creacion de Api Flask
 api = Api(app)
 
-# Acciones GET/POST/PUT/DELETE
+# Acciones GET/POST/PUT/DELETE Administrador
 class RegistrarAdministrador(Resource):
     # Insertar Administrador
     def post(self):
@@ -59,9 +79,22 @@ class ValidarAdministrador(Resource):
                     if admin.password == request.json['password']:
                         return {'success':'true','id':admin.id}
         return {'success':'false'}
-# Endpoints
+
+# Acciones GET/POST/PUT/DELETE Concursos
+
+class TodosLosConcursos(Resource):
+    def get(self):
+        concursos = Concursos.query.all()        
+        return concursos_schema.dump(concursos)
+
+
+
+# Endpoints Administrador
 api.add_resource(RegistrarAdministrador, '/administrador')
 api.add_resource(ValidarAdministrador, '/validar_administrador')
+
+# Endpoints Concursos
+api.add_resource(TodosLosConcursos, '/concursos')
 
 
 @app.route("/")
