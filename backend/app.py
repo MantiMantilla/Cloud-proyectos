@@ -86,7 +86,7 @@ class TodosLosConcursos(Resource):
     def get(self):
         concursos = Concursos.query.all()        
         return concursos_schema.dump(concursos)
-    def put(self):
+    def post(self):
         url_concurso = 'localhost:8080/'+request.json['nombre'].replace(" ","-")
         nuevo_concurso = Concursos(
                 id_admin = request.json['id_admin'],
