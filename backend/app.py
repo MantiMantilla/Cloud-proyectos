@@ -107,6 +107,27 @@ class UnConcurso(Resource):
     def get(self,id_concurso):
         concurso = Concursos.query.get_or_404(id_concurso)
         return concurso_schema.dump(concurso)
+    def put(self,id_concurso):
+        concurso = Concursos.query.get_or_404(id_concurso)
+        if 'id_admin' in request.json:
+            concurso.id_admin = request.json['id_admin']
+        if 'nombre' in request.json:
+            concurso.nombre = request.json['nombre']
+        if 'path_banner' in request.json:
+            concurso.path_banner = request.json['path_banner']
+        if 'fecha_inicio' in request.json:
+            concurso.fecha_inicio = request.json['fecha_inicio']
+        if 'fecha_fin' in request.json:
+            concurso.fecha_fin = request.json['fecha_fin']
+        if 'valor_premio' in request.json:
+            concurso.valor_premio = request.json['valor_premio']
+        if 'guion' in request.json:
+            concurso.guion = request.json['guion']
+        if 'recomendaciones' in request.json:
+            concurso.recomendaciones = request.json['recomendaciones']
+        if 'url' in request.json:
+            concurso.url = request.json['url']
+        db.session.commit()
 
 # Endpoints Administrador
 api.add_resource(RegistrarAdministrador, '/administrador')
