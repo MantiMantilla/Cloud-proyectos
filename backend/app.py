@@ -128,7 +128,7 @@ class UnConcurso(Resource):
         if 'url' in request.json:
             concurso.url = request.json['url']
         db.session.commit()
-
+        return {'message':'El concurso se edito correctamente'}
 # Endpoints Administrador
 api.add_resource(RegistrarAdministrador, '/administrador')
 api.add_resource(ValidarAdministrador, '/validar_administrador')
