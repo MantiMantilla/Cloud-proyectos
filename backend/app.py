@@ -1,4 +1,4 @@
-from datetime import date 
+from datetime import datetime
 from flask import Flask
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
@@ -92,8 +92,8 @@ class TodosLosConcursos(Resource):
                 id_admin = request.json['id_admin'],
                 nombre = request.json['nombre'],
                 path_banner = request.json['path_banner'],
-                fecha_inicio = request.json['fecha_inicio'],
-                fecha_fin = request.json['fecha_fin'],
+                fecha_inicio = datetime.strptime(request.json['fecha_inicio'],"%d/%m/%Y"),
+                fecha_fin = datetime.strptime(request.json['fecha_fin'],"%d/%m/%Y"),
                 valor_premio = request.json['valor_premio'],
                 guion = request.json['guion'],
                 recomendaciones = request.json['recomendaciones'],
