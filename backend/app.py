@@ -86,8 +86,24 @@ class TodosLosConcursos(Resource):
     def get(self):
         concursos = Concursos.query.all()        
         return concursos_schema.dump(concursos)
+    def put(self):
+        url_concurso = 'localhost:8080/'+request.json['nombre'].replace(" ","-")
+        nuevo_concurso = Concursos(
+                id_admin = request.json['id_admin'],
+                nombre = request.json['nombre'],
+                path_banner = request.json['path_banner'],
+                fecha_inicio = request.json['fecha_inicio'],
+                fecha_fin = request.json['fecha_fin'],
+                valor_premio = request.json['valor_premio'],
+                guion = request.json['guion'],
+                recomendaciones = request.json['recomendaciones'],
+                url = url_concurso
+        )
+        db.session.add(nuevo_concurso)
+        db.commit()
+        return {'message':'Concurso creado exitosamente.'}
 
-
+#class UnConcurso(Resource):
 
 # Endpoints Administrador
 api.add_resource(RegistrarAdministrador, '/administrador')
