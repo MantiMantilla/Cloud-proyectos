@@ -1,37 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
 
 const Login = () => {
+  let navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title: 'React POST Request Example' }),
-  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-  useEffect(() => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: 'React POST Request Example' }),
+      body: JSON.stringify({
+        correo: email,
+        password: password,
+      }),
     };
 
     fetch('http://172.24.41.218:8080/validar_administrador', requestOptions)
       .then((response) => response.json())
-      .then((data) => console.log(data));
-  }, []);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  };
-
-  const handleChangeEmail = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handleChangePassword = (event) => {
-    setPassword(event.target.value);
+      .then((data) => {
+        console.log(data.success);
+        if (data.success === 'true') {
+          return navigate(`/home`, { state: data });
+        }
+        // if (data.success === 'true') {
+        //   return <Navigate to="/home" />;
+        // }
+      });
   };
 
   return (
@@ -56,13 +53,13 @@ const Login = () => {
           <input
             type="text"
             value={email}
-            onChange={handleChangeEmail}
+            onChange={(event) => setEmail(event.target.value)}
             placeholder={'name'}
           />
           <input
-            type="text"
+            type="password"
             value={password}
-            onChange={handleChangePassword}
+            onChange={(event) => setPassword(event.target.value)}
             placeholder={'contraseña'}
           />
           <input type="submit" value="Submit" />
