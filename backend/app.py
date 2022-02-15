@@ -12,7 +12,7 @@ CORS(app)
 
 # Inicilizacion de base de datos
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://admin:123456@localhost:5432/project01"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://admin:123456@172.24.41.222:8080/project01"
 # base de datos
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
