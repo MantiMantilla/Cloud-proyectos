@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   let navigate = useNavigate();
@@ -25,9 +25,6 @@ const Login = () => {
         if (data.success === 'true') {
           return navigate(`/home`, { state: data });
         }
-        // if (data.success === 'true') {
-        //   return <Navigate to="/home" />;
-        // }
       });
   };
 
