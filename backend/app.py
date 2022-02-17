@@ -12,7 +12,7 @@ CORS(app)
 
 # Inicilizacion de base de datos
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://admin:123456@localhost:5432/project01"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://admin:123456@172.24.41.222:5432/project01"
 # base de datos
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -89,7 +89,12 @@ class RegistrarAdministrador(Resource):
         )
         db.session.add(nuevo_administrador)
         db.session.commit()
-        return {'message':'Administrador creado exitosamente.'}
+        admins = Administradores.query.filter_by(correo=request.json['correo']).all()
+        for admin in admins:
+            if admin.password == request.json['password']:
+                return {'message':'Administrador creado exitosamente.','id':admin.id}
+
+
 
 class ValidarAdministrador(Resource):
     def post(self):
