@@ -173,7 +173,7 @@ class TodosLasVoces(Resource):
                 nombres = request.json['nombres'],
                 apellidos = request.json['apellidos'],
                 correo = request.json['correo'],
-                #path_original = request.json['path_original'],
+                path_original = request.json['path_original'],
                 observaciones = request.json['observaciones'],
                 fecha_creacion = datetime.now(),
                 estado = 0 #se asegura que la voz no este procesada

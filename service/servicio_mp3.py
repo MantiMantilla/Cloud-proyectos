@@ -4,6 +4,7 @@ from os.path import isfile, join
 import os
 import sys
 import smtplib
+from tkinter import E
 from sqlalchemy import create_engine
 
 db_string = "postgresql://admin:123456@172.24.41.222:5432/project01"
@@ -17,30 +18,33 @@ gmail_password = 'milo te da energia'
 result_set = db.execute("SELECT * FROM Voces WHERE Estado =0")  
 for r in result_set:
     correo = r['correo']
-    path = r['path_original']
-    [nombre, ext] = path.split('.')
-    if ext != 'mp3':
-        cmd = f'ffmpeg -i {path} {nombre}.mp3'
-        try:
-            os.system(cmd)
-        except:
-            print('Error al convertir')
-        path_convertido = f'{nombre}.mp3'
-    else:
-        path_convertido = path
+    patho = r['path_original']
+    if patho != None:
+        [nombre, ext] = patho.split('.')
+        if ext != 'mp3':
+            cmd = f'ffmpeg -i {patho} {nombre}.mp3'
+            try:
+                os.system(cmd)
+            except Exception as e:
+                print(e)
+            path_convertido = f'{nombre}.mp3'
+        else:
+            path_convertido = patho
 
-    db.execute(f"UPDATE Voces SET Estado = 1, path_convertido='{path_convertido}' WHERE id = {r['id']}")
-    # enviar correo
-    try:
-        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        server.ehlo()
-        server.login(gmail_user, gmail_password)
-        server.sendmail(gmail_user, correo, """\
-            Subject: Tu voz se ha convertido!
-            En hora buena hemos convertido tu voz, esta ya ha sido publicada en la 
-            página pública del concurso. Muchos exitos!!!""")         
-    except:
-        print('Something went wrong...')
+        # enviar correo
+        try:
+            server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+            server.ehlo()
+            server.login(gmail_user, gmail_password)
+            print("Loged ok")
+            server.sendmail(gmail_user, correo, """\
+                Subject: Tu voz se ha convertido!
+                En hora buena hemos convertido tu voz, esta ya ha sido publicada en la 
+                pagina publica del concurso. Muchos exitos!!!""")   
+            print("send email ok")    
+            db.execute(f"UPDATE Voces SET Estado = 1, path_convertido='{path_convertido}' WHERE id = {r['id']}")
+        except Exception as e:
+            print(e)
 
 
     """
