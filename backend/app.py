@@ -161,6 +161,9 @@ class UnConcurso(Resource):
         db.session.commit()
         return 'Se borro exitosamente el concurso', 204
 
+import base64
+
+
 # Acciones GET/POST/PUT/DELETE Voces 
 class TodosLasVoces(Resource):
     def get(self):
@@ -178,6 +181,17 @@ class TodosLasVoces(Resource):
                 fecha_creacion = datetime.now(),
                 estado = 0 #se asegura que la voz no este procesada
         )
+
+        [tipo, archivo] = request.json['path_convertido'].split(',')
+        try:
+            ext= tipo.split(';')[0].split('/')[-1]
+            wav_file = open(f"temp.{ext}", "wb")
+            decode_string = base64.b64decode(archivo)
+            wav_file.write(decode_string)
+        except Exception as e:
+            print(str(e))
+
+        print(request)
         db.session.add(nueva_voz)
         db.session.commit()
         return {'message':'Voz creada exitosamente.'}
