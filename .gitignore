@@ -8,7 +8,7 @@ __pycache__/
 *.wav
 *.ogg
 *.mp3
-*.exe
+service/*.exe
 # Distribution / packaging
 .Python
 build/
