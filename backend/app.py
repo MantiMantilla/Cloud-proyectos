@@ -142,9 +142,9 @@ class UnConcurso(Resource):
         if 'path_banner' in request.json:
             concurso.path_banner = request.json['path_banner']
         if 'fecha_inicio' in request.json:
-            concurso.fecha_inicio = request.json['fecha_inicio']
+            concurso.fecha_inicio = datetime.strptime(request.json['fecha_inicio'],"%d/%m/%Y"),
         if 'fecha_fin' in request.json:
-            concurso.fecha_fin = request.json['fecha_fin']
+            concurso.fecha_fin = datetime.strptime(request.json['fecha_fin'],"%d/%m/%Y"),
         if 'valor_premio' in request.json:
             concurso.valor_premio = request.json['valor_premio']
         if 'guion' in request.json:
@@ -173,9 +173,9 @@ class TodosLasVoces(Resource):
                 nombres = request.json['nombres'],
                 apellidos = request.json['apellidos'],
                 correo = request.json['correo'],
-                path_original = request.json['path_original'],
+                #path_original = request.json['path_original'],
                 observaciones = request.json['observaciones'],
-                fecha_creacion = datetime.strptime(request.json['fecha_creacion'],"%d/%m/%Y"),
+                fecha_creacion = datetime.now().strftime("%d/%m/%Y"),
                 estado = 0 #se asegura que la voz no este procesada
         )
         db.session.add(nueva_voz)
