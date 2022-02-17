@@ -175,7 +175,7 @@ class TodosLasVoces(Resource):
                 correo = request.json['correo'],
                 #path_original = request.json['path_original'],
                 observaciones = request.json['observaciones'],
-                fecha_creacion = datetime.now().strftime("%d/%m/%Y"),
+                fecha_creacion = datetime.now(),
                 estado = 0 #se asegura que la voz no este procesada
         )
         db.session.add(nueva_voz)
