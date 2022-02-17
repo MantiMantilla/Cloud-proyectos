@@ -128,7 +128,10 @@ class TodosLosConcursos(Resource):
         db.session.add(nuevo_concurso)
         db.session.commit()
         return {'message':'Concurso creado exitosamente.'}
-
+class getConcursoID(Resource):
+    def get(self,id_concurso):
+        concurso= Concursos.query.get_or_404(id_concurso)
+        return concurso_schema(concurso)
 class UnConcurso(Resource):
     def get(self,id_concurso):
         concurso = Concursos.query.filter_by(id_admin = id_concurso).all()
@@ -240,7 +243,7 @@ api.add_resource(ValidarAdministrador, '/validar_administrador')
 # Endpoints Concursos---
 api.add_resource(TodosLosConcursos, '/concursos')
 api.add_resource(UnConcurso,'/concursos/<int:id_concurso>')
-
+api.add_resource(getConcursoID,'/concurso/<int:id_concurso>')
 
 # Endpoint Voces
 api.add_resource(TodosLasVoces, '/voces')

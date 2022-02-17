@@ -79,12 +79,12 @@
 
             fetch('http://172.24.41.218:8080/concursos/'+id_user)
             .then(response=> response.json())
-            .then(eventos=>{
-                console.log(eventos);
+            .then(concurso=>{
+                console.log(concurso);
                 
-                eventos = eventos.sort((a,b) => a.fecha_creacion > b.fecha_creacion? 1 :-1)
+                concurso = concurso.sort((a,b) => a.fecha_creacion > b.fecha_creacion? 1 :-1)
 
-                eventos.forEach(evento =>{
+                concurso.forEach(concurso =>{
                     let row = table.insertRow();
                     // let id = row.insertCell(0); 
                     let name = row.insertCell(0); 
@@ -97,19 +97,19 @@
                     let detalle = row.insertCell(3); 
                     
                     // id.innerHTML = evento.id;
-                    name.innerHTML = evento.name;
-                    detalle.innerHTML = "<button id='btn_"+evento.id+"' style='margin:4px;' class='btn btn-primary'><i class='fa fa-bars'></i></button>"+
-                                        "<button id='btn_del_"+evento.id+"' style='margin:4px;' class='btn btn-primary'><i class='bi bi-trash-fill'></i></button>"+
-                                        "<button id='btn_edit_"+evento.id+"' style='margin:4px;' class='btn btn-primary'><i class='bi bi-pencil-fill'></i></button>";
+                    name.innerHTML = concurso.nombre;
+                    detalle.innerHTML = "<button id='btn_"+concurso.id+"' style='margin:4px;' class='btn btn-primary'><i class='fa fa-bars'></i></button>"+
+                                        "<button id='btn_del_"+concurso.id+"' style='margin:4px;' class='btn btn-primary'><i class='bi bi-trash-fill'></i></button>"+
+                                        "<button id='btn_edit_"+concurso.id+"' style='margin:4px;' class='btn btn-primary'><i class='bi bi-pencil-fill'></i></button>";
 
-                    $("#btn_"+evento.id).click(()=>{
-                        location.href = 'Detalle_event.html?id='+evento.id;
+                    $("#btn_"+concurso.id).click(()=>{
+                        location.href = 'Detalle_concurso.html?id='+concurso.id;
                     });
-                    $("#btn_del_"+evento.id).click(()=>{
-                        location.href = 'Eliminar_event.html?id='+evento.id;
+                    $("#btn_del_"+concurso.id).click(()=>{
+                        location.href = 'Eliminar_concurso.html?id='+concurso.id;
                     });
-                    $("#btn_edit_"+evento.id).click(()=>{
-                        location.href = 'Editar_event.html?id='+evento.id;
+                    $("#btn_edit_"+concurso.id).click(()=>{
+                        location.href = 'Editar_concurso.html?id='+concurso.id;
                     });
 
                     // $button.on("click",()=>{
@@ -118,8 +118,8 @@
                     // categoria.innerHTML = evento.categoria;
                     // lugar.innerHTML = evento.lugar;
                     // direccion.innerHTML = evento.direccion;
-                    fecha_inicio.innerHTML = evento.fecha_inicio;
-                    fecha_fin.innerHTML = evento.fecha_fin;
+                    fecha_inicio.innerHTML = concurso.fecha_inicio;
+                    fecha_fin.innerHTML = concurso.fecha_fin;
                     // tipo_evento.innerHTML = evento.tipo_evento;
                 });
             });

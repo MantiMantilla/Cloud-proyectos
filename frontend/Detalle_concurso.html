@@ -104,7 +104,7 @@
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             id_buscar = urlParams.get('id')
-            let URL = 'http://172.24.41.222:8080/concursos/'+id_buscar
+            let URL = 'http://172.24.41.218:8080/concurso/'+id_buscar
             fetch(URL)
             .then(response=> {
                 if(!response.ok){
@@ -112,13 +112,13 @@
                 }
                 return response.json();
             })
-            .then(evento=>{
-                document.getElementById('NombredelConcurso').value = evento.name;
-                document.getElementById('lugar').value = evento.lugar;
-                document.getElementById('direccion').value = evento.direccion;
-                document.getElementById('fecha_inicio').value = evento.fecha_inicio;
-                document.getElementById('fecha_fin').value = evento.fecha_fin;
-                document.getElementById('tipo_evento').value = evento.tipo_evento;
+            .then(concurso=>{
+                document.getElementById('NombredelConcurso').value = concurso.nombre;
+                document.getElementById('lugar').value = concurso.lugar;
+                document.getElementById('direccion').value = concurso.direccion;
+                document.getElementById('fecha_inicio').value = concurso.fecha_inicio;
+                document.getElementById('fecha_fin').value = concurso.fecha_fin;
+                document.getElementById('tipo_evento').value = concurso.tipo_evento;
             })
             .catch(error => console.log(error) )
         });
