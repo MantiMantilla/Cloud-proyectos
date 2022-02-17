@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
+import React, { useEffect, useState, useContext } from 'react';
 import Concurso from '../components/concurso/Concurso';
 import { useNavigate, Navigate } from 'react-router-dom';
+import { Context } from '../App';
 
 const Home = () => {
+  const { userId, setUserId } = useContext(Context);
   let navigate = useNavigate();
-  const location = useLocation();
-  const isLogin = location.state.success;
-  console.log(location);
 
   const [listContests, setListContests] = useState([]);
 
@@ -41,6 +39,9 @@ const Home = () => {
                 fecha_fin={contest.fecha_fin}
                 valor_premio={contest.valor_premio}
                 url={contest.url}
+                setListContests={setListContests}
+                listContests={listContests}
+                id={contest.id}
               />
             </div>
           );

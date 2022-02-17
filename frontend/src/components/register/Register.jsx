@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+  let navigate = useNavigate();
   const [name, setName] = useState();
   const [lastname, setLasteName] = useState();
   const [email, setEmail] = useState();
@@ -9,22 +11,28 @@ const Register = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombres: name,
+        apellidos: lastname,
+        correo: email,
+        password: password,
+      }),
+    };
 
     if (password === confirmPassword) {
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nombres: name,
-          apellidos: lastname,
-          correo: email,
-          password: password,
-        }),
-      };
+      console.log(requestOptions);
 
       fetch('http://172.24.41.218:8080/administrador', requestOptions)
         .then((response) => response.json())
-        .then((data) => console.log(data));
+        .then((data) => {
+          console.log(data);
+          if (data.message === 'Administrador creado exitosamente.') {
+            return navigate(`/home`, { state: data });
+          }
+        });
     } else {
       console.log('contraseña no coincide');
     }
@@ -52,13 +60,13 @@ const Register = () => {
         >
           <input
             type="text"
-            value={email}
+            value={name}
             onChange={(event) => setName(event.target.value)}
             placeholder={'name'}
           />
           <input
             type="text"
-            value={email}
+            value={lastname}
             onChange={(event) => setLasteName(event.target.value)}
             placeholder={'last name'}
           />

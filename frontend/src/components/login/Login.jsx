@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { Context } from '../../App';
 
 const Login = () => {
+  const value = useContext(Context);
+  console.log(value);
   let navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -21,8 +25,9 @@ const Login = () => {
     fetch('http://172.24.41.218:8080/validar_administrador', requestOptions)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.success);
+        console.log(data);
         if (data.success === 'true') {
+          value.setUserId(data.id);
           return navigate(`/home`, { state: data });
         }
       });

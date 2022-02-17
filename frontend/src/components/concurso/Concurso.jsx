@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { Context } from '../../App';
+import { useNavigate } from 'react-router-dom';
 
 const Concurso = ({
   nombre,
@@ -10,7 +12,12 @@ const Concurso = ({
   fecha_inicio,
   fecha_fin,
   valor_premio,
+  setListContests,
+  listContests,
 }) => {
+  let navigate = useNavigate();
+  const { userId, setUserId } = useContext(Context);
+
   const [showDetails, setShowDetails] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [name, setName] = useState(nombre);
@@ -20,6 +27,9 @@ const Concurso = ({
   const [valorPremio, setValorPremio] = useState(valor_premio);
   const [script, setScript] = useState(guion);
   const [banner, setBanner] = useState(path_banner);
+  const [link, setLink] = useState(url);
+  const [voces, setVoces] = useState([]);
+  const [showVoces, setShowVoces] = useState(false);
 
   const handleClickEditar = () => {
     setEditMode((prev) => !prev);
@@ -31,36 +41,55 @@ const Concurso = ({
       headers: { 'Content-Type': 'application/json' },
     };
 
-    fetch(`http://172.24.41.218:8080/${id}`, requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });
+    fetch(`http://172.24.41.218:8080/concursos/${id}`, requestOptions).then(
+      (response) => {
+        if (response.ok) {
+          const newState = listContests.filter((contest) => contest.id !== id);
+          setListContests(newState);
+        }
+      }
+    );
   };
   const handleClickDetalles = () => {
     setShowDetails((prev) => !prev);
+  };
+  const handleClickListaVoces = () => {
+    setShowVoces((prev) => !prev);
+    fetch('http://172.24.41.218:8080/voces')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setVoces(data);
+      });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // TODO
-    // const requestOptions = {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     nombre: email,
-    //     password: password,
-    //   }),
-    // };
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id_admin: `${userId}`,
+        nombre: name,
+        path_banner: banner,
+        fecha_inicio: fechaInicio,
+        fecha_fin: fechaFin,
+        valor_premio: valorPremio,
+        guion: script,
+        recomendaciones: recomendations,
+        url: link,
+      }),
+    };
 
-    // fetch('http://172.24.41.218:8080/validar_administrador', requestOptions)
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log(data.success);
-    //     if (data.success === 'true') {
-    //       return navigate(`/home`, { state: data });
-    //     }
-    //   });
+    fetch(`http://172.24.41.218:8080/concursos/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.message === 'El concurso se edito correctamente') {
+          return navigate(`/home`);
+        }
+      });
   };
 
   return (
@@ -74,7 +103,11 @@ const Concurso = ({
         >
           editar
         </button>
-        <button style={{ marginLeft: 10 }} type="button">
+        <button
+          style={{ marginLeft: 10 }}
+          type="button"
+          onClick={handleClickEliminar}
+        >
           eliminar
         </button>
         <button
@@ -83,6 +116,13 @@ const Concurso = ({
           onClick={handleClickDetalles}
         >
           Ver Detalles
+        </button>
+        <button
+          style={{ marginLeft: 10 }}
+          type="button"
+          onClick={handleClickListaVoces}
+        >
+          Lista de voces
         </button>
       </div>
       {showDetails && (
@@ -115,17 +155,17 @@ const Concurso = ({
             />
             Fecha inicio
             <input
-              type="date"
+              type="text"
               value={fechaInicio}
               onChange={(event) => setFechaInicio(event.target.value)}
-              placeholder={'fecha Inicio'}
+              placeholder={'dd/MM/YYY'}
             />
             Fecha fin
             <input
-              type="date"
+              type="text"
               value={fechaFin}
               onChange={(event) => setFechaFin(event.target.value)}
-              placeholder={'fecha Fin'}
+              placeholder={'dd/MM/YYY'}
             />
             Valor premio
             <input
@@ -155,10 +195,35 @@ const Concurso = ({
               onChange={(event) => setBanner(event.target.value)}
               placeholder={'Banner'}
             />
+            URL
+            <input
+              type="text"
+              value={link}
+              onChange={(event) => setLink(event.target.value)}
+              placeholder={'url'}
+            />
             <input type="submit" value="Submit" />
           </div>
         </form>
       )}
+      {showVoces &&
+        voces.map((voz) => (
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ padding: 10 }}>{voz.nombres}</div>
+            <div style={{ padding: 10 }}> {voz.correo}</div>
+            <div style={{ padding: 10 }}>{voz.correo}</div>
+            <div style={{ padding: 10 }}> {voz.fecha_creacion}</div>
+            <div style={{ padding: 10 }}>
+              {' '}
+              {voz.estado === 0 ? 'En proceso' : 'Convertida'}
+            </div>
+            <div style={{ outline: '1pc solid red' }}>
+              {/* <audio>
+                <source src={audio}></source>
+              </audio> */}
+            </div>
+          </div>
+        ))}
     </div>
   );
 };
