@@ -131,8 +131,8 @@ class TodosLosConcursos(Resource):
 
 class UnConcurso(Resource):
     def get(self,id_concurso):
-        concurso = Concursos.query.get_or_404(id_concurso)
-        return concurso_schema.dump(concurso)
+        concurso = Concursos.query.filter_by(id_admin = id_concurso).all()
+        return concursos_schema.dump(concurso)
     def put(self,id_concurso):
         concurso = Concursos.query.get_or_404(id_concurso)
         if 'id_admin' in request.json:
