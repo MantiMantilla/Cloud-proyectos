@@ -111,7 +111,7 @@
             .catch(error => console.log(error) )
         });
         $("#aceptar").click(()=>{
-            let URL = 'http://172.24.41.222:8080/concursos/'+id_buscar
+            let URL = 'http://172.24.41.218:8080/concursos/'+id_buscar
             fetch(URL, {
                 method: 'DELETE'
             })
