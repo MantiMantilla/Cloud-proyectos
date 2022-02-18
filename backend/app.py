@@ -142,7 +142,11 @@ class getConcursoID(Resource):
     def get(self,id_concurso):
         concurso = Concursos.query.get_or_404(id_concurso)
         [name, ext] = concurso.path_banner.split('.')
-        concurso.path_banner = f'data:image/{ext};base64,'+base64.b64encode(concurso.path_banner)
+        img_64=''
+        with open(concurso.path_banner, "rb") as image_file:
+            img_64 = base64.b64encode(image_file.read())
+
+        concurso.path_banner = f'data:image/{ext};base64,'+img_64
         return concurso_schema.dump(concurso)
 
 class UnConcurso(Resource):
