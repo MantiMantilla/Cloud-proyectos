@@ -34,7 +34,7 @@
             
             <div class="mb-3 form-group">
                 <label for="exampleFormControlInput1" class="form-label">Nombre del concurso</label>
-                <input type="text" class="form-control" id="NombredelConcurso" placeholder="Escriba el nombre del concurso">
+                <input type="text" disabled class="form-control" id="NombredelConcurso" placeholder="Escriba el nombre del concurso">
             </div>
 
             <!--<div class="mb-3">
@@ -114,6 +114,7 @@
                 document.getElementById('fecha_inicio').value = concurso.fecha_inicio;
                 document.getElementById('fecha_fin').value = concurso.fecha_fin;
                 document.getElementById('recomendaciones').value = concurso.recomendaciones;
+                document.getElementById('URL_concurso').value = concurso.url;
             })
             .catch(error => console.log(error) )
         });

@@ -113,7 +113,6 @@ class TodosLosConcursos(Resource):
         concursos = Concursos.query.all()        
         return concursos_schema.dump(concursos)
     def post(self):
-        url_concurso = 'localhost:8080/'+request.json['nombre'].replace(" ","-")
         [tipo, archivo] = request.json['path_banner'].split(',')
         nom_img = request.json['nombre'].replace(" ","-")
         try:
@@ -132,7 +131,7 @@ class TodosLosConcursos(Resource):
                 valor_premio = request.json['valor_premio'],
                 guion = request.json['guion'],
                 recomendaciones = request.json['recomendaciones'],
-                url = url_concurso
+                url = request.json['url']
         )
         db.session.add(nuevo_concurso)
         db.session.commit()
@@ -145,6 +144,8 @@ class getConcursoID(Resource):
         img_64=''
         with open(concurso.path_banner, "rb") as image_file:
             img_64 = base64.b64encode(image_file.read())
+
+        concurso.url = f'http://172.24.41.218:8080/concursos?id={concurso.id}&concurso={concurso.url}'
 
         concurso.path_banner = f'data:image/{ext};base64,'+img_64.decode('utf-8')
         return concurso_schema.dump(concurso)

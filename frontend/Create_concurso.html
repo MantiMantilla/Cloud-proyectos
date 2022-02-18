@@ -71,13 +71,11 @@
                 <label class="control-label" for="date">Fecha fin</label>
                 <input class="form-control" id="fecha_fin" name="fecha_fin" placeholder="DD/MM/YYY" type="text"/>
             </div>
-
             
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Valor a pagar voz seleccionada</label>
                 <input id="valor_premio" type="text" class="form-control" id="exampleFormControlInput1" placeholder="$">
             </div>
-
 
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Guion o texto que debe expresar la voz</label>
@@ -91,7 +89,7 @@
 
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">URL</label>
-                <input id="URL_concurso" type="text" class="form-control" id="exampleFormControlInput1" placeholder="...">
+                <input id="url_texto" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Texto para url">
             </div>
             <div style="margin-top: 20px;" class="row justify-content-center form-group">
                 <button id="crear" class="btn btn-primary col-4">Crear</button>
@@ -104,6 +102,7 @@
         $(()=>{
             $('#lbl_error').hide();
         });
+
 
         function getBase64(file) {
 			return new Promise((resolve, reject) => {
@@ -160,7 +159,8 @@
                     guion : document.getElementById('guion').value,
                     fecha_inicio : document.getElementById('fecha_inicio').value,
                     fecha_fin : document.getElementById('fecha_fin').value,
-                    recomendaciones : document.getElementById('recomendaciones').value 
+                    recomendaciones : document.getElementById('recomendaciones').value ,
+                    url : document.getElementById('url_texto').value.replaceAll(' ','-')
                 })
             })
             .then(response=> response.json())
