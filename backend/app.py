@@ -146,7 +146,7 @@ class getConcursoID(Resource):
         with open(concurso.path_banner, "rb") as image_file:
             img_64 = base64.b64encode(image_file.read())
 
-        concurso.path_banner = f'data:image/{ext};base64,'+img_64
+        concurso.path_banner = f'data:image/{ext};base64,'+img_64.decode('utf-8')
         return concurso_schema.dump(concurso)
 
 class UnConcurso(Resource):
