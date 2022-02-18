@@ -31,7 +31,7 @@
     <div class="row justify-content-center">
         <div class="col-7">
             <h1>Detalle del concurso</h1>
-           
+            
             <div class="mb-3 form-group">
                 <label for="exampleFormControlInput1" class="form-label">Nombre del concurso</label>
                 <input type="text" class="form-control" id="NombredelConcurso" placeholder="Escriba el nombre del concurso">
@@ -49,14 +49,7 @@
             </div>-->
 
             <div class="input-group mb-3">
-                <div class="custom-file">
-                <label for="exampleFormControlInput1" class="form-label">Imagen del concurso</label>
-                <input type="file" class="custom-file-input" id="inputGroupFile02">
-                <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
-                </div>
-                <div class="input-group-append">
-                <span class="input-group-text" id="">Upload</span>
-                </div>
+                <img id="banner"/>
             </div>
             
 
@@ -114,11 +107,12 @@
             })
             .then(concurso=>{
                 document.getElementById('NombredelConcurso').value = concurso.nombre;
-                document.getElementById('lugar').value = concurso.lugar;
-                document.getElementById('direccion').value = concurso.direccion;
+                document.getElementById('banner').src = concurso.path_banner;
+                document.getElementById('valor_premio').value = concurso.valor_premio;
+                document.getElementById('guion').value = concurso.guion;
                 document.getElementById('fecha_inicio').value = concurso.fecha_inicio;
                 document.getElementById('fecha_fin').value = concurso.fecha_fin;
-                document.getElementById('tipo_evento').value = concurso.tipo_evento;
+                document.getElementById('recomendaciones').value = concurso.recomendaciones;
             })
             .catch(error => console.log(error) )
         });

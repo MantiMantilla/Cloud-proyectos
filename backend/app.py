@@ -114,10 +114,19 @@ class TodosLosConcursos(Resource):
         return concursos_schema.dump(concursos)
     def post(self):
         url_concurso = 'localhost:8080/'+request.json['nombre'].replace(" ","-")
+        [tipo, archivo] = request.json['path_banner'].split(',')
+        nom_img = request.json['nombre'].replace(" ","-")
+        try:
+            ext= tipo.split(';')[0].split('/')[-1]
+            wav_file = open(f"{nom_img}.{ext}", "wb")
+            decode_string = base64.b64decode(archivo)
+            wav_file.write(decode_string)
+        except Exception as e:
+            print(str(e))
         nuevo_concurso = Concursos(
                 id_admin = request.json['id_admin'],
                 nombre = request.json['nombre'],
-                path_banner = request.json['path_banner'],
+                path_banner = f"{nom_img}.{ext}",
                 fecha_inicio = datetime.strptime(request.json['fecha_inicio'],"%d/%m/%Y"),
                 fecha_fin = datetime.strptime(request.json['fecha_fin'],"%d/%m/%Y"),
                 valor_premio = request.json['valor_premio'],
@@ -137,6 +146,8 @@ class getConcursoID(Resource):
 class UnConcurso(Resource):
     def get(self,id_concurso):
         concurso = Concursos.query.filter_by(id_admin = id_concurso).all()
+        [name, ext] = concurso.path_banner.split('.')
+        concurso.path_banner = f'data:image/{ext};base64,'+base64.b64encode(concurso.path_banner)
         return concursos_schema.dump(concurso)
     def put(self,id_concurso):
         concurso = Concursos.query.get_or_404(id_concurso)
