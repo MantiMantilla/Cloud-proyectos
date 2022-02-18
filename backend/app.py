@@ -128,10 +128,12 @@ class TodosLosConcursos(Resource):
         db.session.add(nuevo_concurso)
         db.session.commit()
         return {'message':'Concurso creado exitosamente.'}
+
 class getConcursoID(Resource):
     def get(self,id_concurso):
-        concurso= Concursos.query.get_or_404(id_concurso)
-        return concurso_schema(concurso)
+        concurso = Concursos.query.get_or_404(id_concurso)
+        return concurso_schema.dump(concurso)
+
 class UnConcurso(Resource):
     def get(self,id_concurso):
         concurso = Concursos.query.filter_by(id_admin = id_concurso).all()
