@@ -144,8 +144,8 @@ class getConcursoID(Resource):
         img_64=''
         with open(concurso.path_banner, "rb") as image_file:
             img_64 = base64.b64encode(image_file.read())
-
-        concurso.url = f'http://172.24.41.218:8080/concursos?id={concurso.id}&concurso={concurso.url}'
+        url = concurso.url
+        concurso.url = f'http://172.24.41.218:8080/concursos.html?id={concurso.id}&concurso={url}'
 
         concurso.path_banner = f'data:image/{ext};base64,'+img_64.decode('utf-8')
         return concurso_schema.dump(concurso)
