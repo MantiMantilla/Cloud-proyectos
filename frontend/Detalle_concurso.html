@@ -106,6 +106,7 @@
                 return response.json();
             })
             .then(concurso=>{
+                console.log(concurso.path_banner);
                 document.getElementById('NombredelConcurso').value = concurso.nombre;
                 document.getElementById('banner').src = concurso.path_banner;
                 document.getElementById('valor_premio').value = concurso.valor_premio;

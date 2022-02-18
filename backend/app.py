@@ -141,13 +141,13 @@ class TodosLosConcursos(Resource):
 class getConcursoID(Resource):
     def get(self,id_concurso):
         concurso = Concursos.query.get_or_404(id_concurso)
+        [name, ext] = concurso.path_banner.split('.')
+        concurso.path_banner = f'data:image/{ext};base64,'+base64.b64encode(concurso.path_banner)
         return concurso_schema.dump(concurso)
 
 class UnConcurso(Resource):
     def get(self,id_concurso):
         concurso = Concursos.query.filter_by(id_admin = id_concurso).all()
-        [name, ext] = concurso.path_banner.split('.')
-        concurso.path_banner = f'data:image/{ext};base64,'+base64.b64encode(concurso.path_banner)
         return concursos_schema.dump(concurso)
     def put(self,id_concurso):
         concurso = Concursos.query.get_or_404(id_concurso)
