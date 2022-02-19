@@ -292,7 +292,7 @@ def obtenerVozOriginal(id_voz):
     print('Voice prepared')    
     return jsonify({
         'success' : true,
-        'archivo' : voz_enviar
+        'archivo' : 'voz_enviar'
         })
 
 
