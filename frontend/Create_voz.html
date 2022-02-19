@@ -175,7 +175,10 @@
                 body: JSON.stringify(jsondata)
             })
             .then(response=> response.json())
-            .then(dato => console.log(dato))
+            .then(dato => {
+                console.log(dato);
+                alert("Hemos recibido tu voz y la estamos procesando para que sea publicada en la página del concurso y pueda ser posteriormente revisada por nuestro equipo de trabajo. Tan pronto la voz quede publicada en la página del concurso te notificaremos por email");
+            })
             .catch(err=>console.error(err));
             /*fetch(URL, {
                 method: 'POST',

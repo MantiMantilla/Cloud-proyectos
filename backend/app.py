@@ -116,7 +116,7 @@ class TodosLosConcursos(Resource):
         nom_img = request.json['nombre'].replace(" ","-")
         try:
             ext= tipo.split(';')[0].split('/')[-1]
-            wav_file = open(f"{nom_img}.{ext}", "wb")
+            wav_file = open(f"/files/imagen/{nom_img}.{ext}", "wb")
             decode_string = base64.b64decode(archivo)
             wav_file.write(decode_string)
         except Exception as e:
@@ -192,25 +192,25 @@ class TodosLasVoces(Resource):
     
     def post(self):
         nueva_voz = Voces(
-                id_concurso = request.json['id_concurso'],
-                nombres = request.json['nombres'],
-                apellidos = request.json['apellidos'],
-                correo = request.json['correo'],
-                observaciones = request.json['observaciones'],
-                fecha_creacion = datetime.now(),
-                estado = 0 #se asegura que la voz no este procesada
+            id_concurso = request.json['id_concurso'],
+            nombres = request.json['nombres'],
+            apellidos = request.json['apellidos'],
+            correo = request.json['correo'],
+            observaciones = request.json['observaciones'],
+            fecha_creacion = datetime.now(),
+            estado = 0 #se asegura que la voz no este procesada
         )
 
         [tipo, archivo] = request.json['archivo'].split(',')
+        nom_voz = nueva_voz.nombres.replace(' ','_')+datetime.now().microsecond
         try:
-            ext= tipo.split(';')[0].split('/')[-1]
-            wav_file = open(f"temp.{ext}", "wb")
+            ext = tipo.split(';')[0].split('/')[-1]
+            wav_file = open(f"/files/voz/{nom_voz}.{ext}", "wb")
             decode_string = base64.b64decode(archivo)
             wav_file.write(decode_string)
         except Exception as e:
             print(str(e))
-
-        print(request)
+        nueva_voz.path_original = f"/files/voz/{nom_voz}.{ext}"
         db.session.add(nueva_voz)
         db.session.commit()
         return {'message':'Voz creada exitosamente.'}
@@ -220,6 +220,12 @@ class TodosLasVoces(Resource):
 class UnaVoz(Resource):
     def get(self,id_voz):
         voz = Voces.query.get_or_404(id_voz)
+        if (voz.estado==1):
+            [name, ext] = voz.path_original.split('.')
+            voz_64=''
+            with open(voz.path_original, "rb") as voz_file:
+                voz_64 = base64.b64encode(voz_file.read())
+            voz.path_banner = f'data:audio/{ext};base64,'+voz_64.decode('utf-8')
         return voz_schema.dump(voz)
     
     def put(self,id_voz):
