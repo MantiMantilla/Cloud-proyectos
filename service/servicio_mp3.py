@@ -1,10 +1,5 @@
-from os import listdir
-from os.path import isfile, join
-
 import os
-import sys
 import smtplib
-from tkinter import E
 from sqlalchemy import create_engine
 
 db_string = "postgresql://admin:123456@172.24.41.222:5432/project01"
