@@ -30,7 +30,8 @@ for r in result_set:
 
         # enviar correo
         try:
-            server = smtplib.SMTP_SSL('smtp.gmail.com', 587)
+            server = smtplib.SMTP('smtp.gmail.com', 25)
+            server.starttls()
             server.ehlo()
             server.login(gmail_user, gmail_password)
             print("Loged ok")
