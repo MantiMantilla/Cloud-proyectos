@@ -124,7 +124,7 @@ class TodosLosConcursos(Resource):
         nuevo_concurso = Concursos(
                 id_admin = request.json['id_admin'],
                 nombre = request.json['nombre'],
-                path_banner = f"{nom_img}.{ext}",
+                path_banner = f"/files/imagen/{nom_img}.{ext}",
                 fecha_inicio = datetime.strptime(request.json['fecha_inicio'],"%d/%m/%Y"),
                 fecha_fin = datetime.strptime(request.json['fecha_fin'],"%d/%m/%Y"),
                 valor_premio = request.json['valor_premio'],
