@@ -37,6 +37,7 @@ for r in result_set:
             print("Loged ok")
             server.sendmail(gmail_user, correo, """\
                 Subject: Tu voz se ha convertido!
+                
                 En hora buena hemos convertido tu voz, esta ya ha sido publicada en la 
                 pagina publica del concurso. Muchos exitos!!!""")   
             print("send email ok")    
