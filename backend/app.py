@@ -6,6 +6,7 @@ from flask_marshmallow import Marshmallow
 from flask_restful import Api, Resource
 from flask_cors import CORS
 from itsdangerous import json
+from sqlalchemy import false, true
 
 app = Flask(__name__)
 CORS(app)
@@ -258,6 +259,7 @@ class UnaVoz(Resource):
         return 'La voz se borro exitosamente', 204
 
 
+
 # Endpoints Administrador
 api.add_resource(RegistrarAdministrador, '/administrador')
 api.add_resource(ValidarAdministrador, '/validar_administrador')
@@ -271,10 +273,27 @@ api.add_resource(getConcursoID,'/concurso/<int:id_concurso>')
 api.add_resource(TodosLasVoces, '/voces')
 api.add_resource(UnaVoz,'/voces/<int:id_voz>')
 
-"""@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
-"""
+@app.route("/voces/original/<id_voz>")
+def obtenerVozOriginal(id_voz):
+    voz = Voces.query.get_or_404(id_voz)
+    voz_enviar = ''
+    try:
+        if (voz.estado==1):
+            [name, ext] = voz.path_original.split('.')
+            voz_64=''
+            with open(voz.path_original, "rb") as voz_file:
+                voz_64 = base64.b64encode(voz_file.read())
+            voz_enviar = f'data:audio/{ext};base64,'+voz_64.decode('utf-8')
+    except Exception as e:
+        return {
+            'success' : false,
+            'message' : str(e)
+            }            
+    return {
+        'success' : true,
+        'archivo' : voz_enviar
+        }
+
 
 if __name__ == '__main__':
     app.run(debug=False,host="0.0.0.0", port=8080)

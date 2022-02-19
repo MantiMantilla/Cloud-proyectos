@@ -14,6 +14,9 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+
   
     <title>Hello, world!</title>
   </head>
@@ -82,7 +85,7 @@
                             <th scope="col">E-mail</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Apellidos</th>
-                            <th scope="col">Fecha creacion</th>
+                            <!-- <th scope="col">Fecha creacion</th> -->
                             <th scope="col">Estado</th>
                             <th scope="col">Original</th>
                             <th scope="col">Convertido</th>
@@ -104,6 +107,8 @@
     
     <script type="text/javascript">
         var id_buscar = "1";
+        const table = document.getElementById("tabla-concursos");
+
         $(document).ready(async function(){
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
@@ -118,7 +123,7 @@
                 return response.json();
             })
             .then(concurso=>{
-                console.log(concurso.path_banner);
+                // console.log(concurso.path_banner);
                 document.getElementById('NombredelConcurso').innerHTML = concurso.nombre;
                 document.getElementById('banner').src = concurso.path_banner;
                 document.getElementById('valor_premio').value = concurso.valor_premio;
@@ -130,14 +135,44 @@
             })
             .catch(error => console.log(error) );
             // Traer voces
+            console.log(urlBase+'voces')
             await fetch(urlBase+'voces')
             .then(response =>{
                 if(!response.ok){
                     throw Error(response.statusText);
                 }
+                return response.json()
             })
             .then(voces =>{
-                console.log("voces");
+                console.log(voces);
+                voces = voces.sort((a,b) => a.fecha_creacion > b.fecha_creacion? 1 :-1)
+                
+                voces.forEach( voz => {
+                    let row = table.insertRow();
+                    let correo = row.insertCell(0); 
+                    let name = row.insertCell(1); 
+                    let apellidos= row.insertCell(2); 
+                    let Estado = row.insertCell(3); 
+                    let Original = row.insertCell(4); 
+                    let Convertido= row.insertCell(5); 
+
+                    correo.innerHTML = voz.correo;
+                    name.innerHTML = voz.nombres;
+                    apellidos.innerHTML = voz.apellidos;
+                    if( voz.Estado == 0)
+                    {
+                        Estado.innerHTML = "En proceso";
+                        Convertido.innerHTML = "<button id='btn_c_"+voz.id+"' style='margin:5px;' class='btn btn-primary'><i class='bi bi-mic-mute'></i></button>";
+                    }
+                    else
+                    {
+                        Estado.innerHTML = 'Convertida';    
+                        Convertido.innerHTML = "<button id='btn_c_d_"+voz.id+"' style='margin:5px;' class='btn btn-primary'><i class='bi bi-download'></i></button>"+
+                                               "<button id='btn_c_p_"+voz.id+"' style='margin:5px;' class='btn btn-primary'><i class='bi bi-mic-fill'></i></button>";
+                    }
+                    Original.innerHTML = "<button id='btn_"+voz.id+"' style='margin:5px;' class='btn btn-primary'><i class='bi bi-download'></i></button>";
+
+                });
             })
             .catch(err=> console.error(err));
         });
