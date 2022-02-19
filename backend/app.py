@@ -278,12 +278,38 @@ def obtenerVozOriginal(id_voz):
     voz = Voces.query.get_or_404(id_voz)
     voz_enviar = ''
     try:
+        [name, ext] = voz.path_original.split('.')
+        voz_64=''
+        with open(voz.path_original, "rb") as voz_file:
+            voz_64 = base64.b64encode(voz_file.read())
+        voz_enviar = f'data:audio/{ext};base64,'+voz_64.decode('utf-8')
+    except Exception as e:
+        return jsonify({
+            'success' : False,
+            'message' : str(e)
+            })        
+    print('Voice prepared')    
+    return jsonify({
+        'success' : True,
+        'archivo' : voz_enviar
+        })
+
+@app.route("/voces/convertido/<id_voz>")
+def obtenerVozConvertido(id_voz):
+    voz = Voces.query.get_or_404(id_voz)
+    voz_enviar = ''
+    try:
         if (voz.estado==1):
-            [name, ext] = voz.path_original.split('.')
+            [name, ext] = voz.path_convertido.split('.')
             voz_64=''
-            with open(voz.path_original, "rb") as voz_file:
+            with open(voz.path_convertido, "rb") as voz_file:
                 voz_64 = base64.b64encode(voz_file.read())
             voz_enviar = f'data:audio/{ext};base64,'+voz_64.decode('utf-8')
+        else:
+            return jsonify({
+                'success' : False,
+                'message' : 'Audio no convertido'
+            })
     except Exception as e:
         return jsonify({
             'success' : False,
