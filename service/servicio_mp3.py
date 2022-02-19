@@ -18,6 +18,8 @@ for r in result_set:
         [nombre, ext] = patho.split('.')
         if ext != 'mp3':
             cmd = f'ffmpeg -i {patho} {nombre}.mp3'
+
+            print(cmd)
             try:
                 os.system(cmd)
             except Exception as e:
