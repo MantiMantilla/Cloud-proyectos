@@ -291,7 +291,7 @@ def obtenerVozOriginal(id_voz):
             }            
     return {
         'success' : true,
-        'archivo' : voz_enviar
+        'archivo' : 'test'
         }
 
 
