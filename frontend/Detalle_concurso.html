@@ -148,6 +148,7 @@
                 voces = voces.sort((a,b) => a.fecha_creacion > b.fecha_creacion? 1 :-1)
                 
                 voces.forEach( voz => {
+                    
                     let row = table.insertRow();
                     let correo = row.insertCell(0); 
                     let name = row.insertCell(1); 
@@ -159,7 +160,7 @@
                     correo.innerHTML = voz.correo;
                     name.innerHTML = voz.nombres;
                     apellidos.innerHTML = voz.apellidos;
-                    if( voz.Estado == 0)
+                    if( voz.estado == 0)
                     {
                         Estado.innerHTML = "En proceso";
                         Convertido.innerHTML = "<button id='btn_c_"+voz.id+"' style='margin:5px;' class='btn btn-primary'><i class='bi bi-mic-mute'></i></button>";
@@ -176,7 +177,7 @@
                                 data =>{
                                     if(data.success)
                                     {
-                                        const ext_file = voz.path_original.split('.').pop()
+                                        const ext_file = voz.path_convertido.split('.').pop()
                                         const downloadLink = document.createElement("a");
                                         downloadLink.href = data.archivo;
                                         downloadLink.download = 'fileName.'+ext_file;

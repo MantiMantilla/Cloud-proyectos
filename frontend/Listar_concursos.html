@@ -101,7 +101,7 @@
                     detalle.innerHTML = "<button id='btn_"+concurso.id+"' style='margin:4px;' class='btn btn-primary'><i class='fa fa-bars'></i></button>"+
                                         "<button id='btn_del_"+concurso.id+"' style='margin:4px;' class='btn btn-primary'><i class='bi bi-trash-fill'></i></button>"+
                                         "<button id='btn_edit_"+concurso.id+"' style='margin:4px;' class='btn btn-primary'><i class='bi bi-pencil-fill'></i></button>";
-
+                    
                     $("#btn_"+concurso.id).click(()=>{
                         location.href = 'Detalle_concurso.html?id='+concurso.id;
                     });
