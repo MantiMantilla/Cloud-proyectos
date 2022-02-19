@@ -286,12 +286,12 @@ def obtenerVozOriginal(id_voz):
             voz_enviar = f'data:audio/{ext};base64,'+voz_64.decode('utf-8')
     except Exception as e:
         return jsonify({
-            'success' : false,
+            'success' : False,
             'message' : str(e)
             })        
     print('Voice prepared')    
     return jsonify({
-        'success' : true,
+        'success' : True,
         'archivo' : 'voz_enviar'
         })
 
