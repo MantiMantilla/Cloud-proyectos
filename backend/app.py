@@ -202,7 +202,7 @@ class TodosLasVoces(Resource):
         )
 
         [tipo, archivo] = request.json['archivo'].split(',')
-        nom_voz = nueva_voz.nombres.replace(' ','_')+datetime.now().microsecond
+        nom_voz = nueva_voz.nombres.replace(' ','_')+str(datetime.now().microsecond)
         try:
             ext = tipo.split(';')[0].split('/')[-1]
             wav_file = open(f"/files/voz/{nom_voz}.{ext}", "wb")
