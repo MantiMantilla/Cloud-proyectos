@@ -148,7 +148,8 @@
                 voces = voces.sort((a,b) => a.fecha_creacion > b.fecha_creacion? 1 :-1)
                 
                 voces.forEach( voz => {
-                    
+                    if (voz.id_concurso != id_buscar)
+                        return
                     let row = table.insertRow();
                     let correo = row.insertCell(0); 
                     let name = row.insertCell(1); 
