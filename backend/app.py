@@ -1,11 +1,11 @@
 from datetime import datetime
 from flask import Flask
 from flask import request
+from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow  
 from flask_restful import Api, Resource
 from flask_cors import CORS
-from itsdangerous import json
 from sqlalchemy import false, true
 
 app = Flask(__name__)
@@ -285,14 +285,14 @@ def obtenerVozOriginal(id_voz):
                 voz_64 = base64.b64encode(voz_file.read())
             voz_enviar = f'data:audio/{ext};base64,'+voz_64.decode('utf-8')
     except Exception as e:
-        return {
+        return jsonify({
             'success' : false,
             'message' : str(e)
-            }            
-    return {
+            })            
+    return jsonify({
         'success' : true,
-        'archivo' : 'test'
-        }
+        'archivo' : voz_enviar
+        })
 
 
 if __name__ == '__main__':
