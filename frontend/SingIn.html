@@ -72,6 +72,7 @@
             console.log(usuario)
             if (usuario.success=='true')
             {
+              console.log(usuario)
               localStorage.setItem('user_loged',usuario.id);
               console.log("usuario validado satisfactoriamente");
               location.href = 'Listar_concursos.html';

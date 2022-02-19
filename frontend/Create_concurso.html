@@ -99,8 +99,12 @@
     </div>
     
     <script type="text/javascript">
+        var id_adm =0;
+        
         $(()=>{
             $('#lbl_error').hide();
+            id_adm=localStorage.getItem('user_loged');
+            console.log(id_adm);
         });
 
 
