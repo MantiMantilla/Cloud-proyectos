@@ -35,11 +35,12 @@ for r in result_set:
             server.ehlo()
             server.login(gmail_user, gmail_password)
             print("Loged ok")
-            server.sendmail(gmail_user, correo, """\
-                Subject: Tu voz se ha convertido!
-                
-                En hora buena hemos convertido tu voz, esta ya ha sido publicada en la 
-                pagina publica del concurso. Muchos exitos!!!""")   
+            to = 'p.cloud.u01@gmail.com'
+            header = 'To:' + to + '\n' + 'From:' + gmail_user + '\n' + 'Estado concurso \n'
+            
+            msg = header + '\n En hora buena hemos convertido tu voz, esta ya ha sido publicada en la pagina publica del concurso. Muchos exitos!!!'
+            
+            server.sendmail(gmail_user, correo, msg)   
             print("send email ok")    
             db.execute(f"UPDATE Voces SET Estado = 1, path_convertido='{path_convertido}' WHERE id = {r['id']}")
         except Exception as e:
