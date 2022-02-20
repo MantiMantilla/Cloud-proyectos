@@ -1,8 +1,6 @@
 import os
 import smtplib
 from sqlalchemy import create_engine
-from email.header import Header
-
 
 db_string = "postgresql://admin:123456@172.24.41.222:5432/project01"
 
@@ -38,9 +36,8 @@ for r in result_set:
             server.login(gmail_user, gmail_password)
             print("Loged ok")
             to = 'p.cloud.u01@gmail.com'
-            header = 'To:' + to + '\n' + 'From:' + gmail_user 
-            subject = 'Tu voz ha sido convertida'
-            msg['Subject'] = Header(subject, 'utf-8')
+            header = 'To:' + to + '\n' + 'From:' + gmail_user + '\n' + 'Estado concurso \n'
+            
             msg = header + '\n En hora buena hemos convertido tu voz, esta ya ha sido publicada en la pagina publica del concurso. Muchos exitos!!!'
             
             server.sendmail(gmail_user, correo, msg)   
