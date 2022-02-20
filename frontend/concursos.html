@@ -126,6 +126,9 @@
             })
             .catch(error => console.log(error) )
         });
+        $("#subeVoz").click(()=>{
+            location.href = 'Create_voz.html?id='+id_buscar;
+        })
         $("#regresar").click(()=>{
             location.href = 'Listar_concursos.html';
         });

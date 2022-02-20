@@ -30,13 +30,10 @@
     -->
     <div class="row justify-content-center">
         <div class="col-7">
-            <h1>Editar concurso</h1>
-            <!-- <div class="mb-3 form-group row justify-content-center d-flex">
-                <label class="col-4">id del evento</label>
-                <input id="id_buscar" class="col-2" type="number" value="1">
-                <button id="buscar" class="col-4 btn btn-primary">Buscar</button>
-            </div> -->
-            
+            <h1>Editar los datos del concurso</h1>
+            <div id="lbl_error" class="alert alert-danger" >
+                <label class="form-label">Todos los datos son obligatorios</label>
+            </div>
             <div class="mb-3 form-group">
                 <label for="exampleFormControlInput1" class="form-label">Nombre del concurso</label>
                 <input type="text" class="form-control" id="NombredelConcurso" placeholder="Escriba el nombre del concurso">
@@ -56,12 +53,12 @@
             <div class="input-group mb-3">
                 <div class="custom-file">
                 <label for="exampleFormControlInput1" class="form-label">Imagen del concurso</label>
-                <input type="file" class="custom-file-input" id="inputGroupFile02">
+                <input type="file" class="custom-file-input" id="banner">
                 <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
                 </div>
-                <div class="input-group-append">
+                <!-- <div class="input-group-append">
                 <span class="input-group-text" id="">Upload</span>
-                </div>
+                </div> -->
             </div>
             
 
@@ -74,13 +71,11 @@
                 <label class="control-label" for="date">Fecha fin</label>
                 <input class="form-control" id="fecha_fin" name="fecha_fin" placeholder="DD/MM/YYY" type="text"/>
             </div>
-
             
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Valor a pagar voz seleccionada</label>
                 <input id="valor_premio" type="text" class="form-control" id="exampleFormControlInput1" placeholder="$">
             </div>
-
 
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Guion o texto que debe expresar la voz</label>
@@ -94,13 +89,10 @@
 
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">URL</label>
-                <input id="URL_concurso" type="text" class="form-control" id="exampleFormControlInput1" placeholder="...">
+                <input id="url_texto" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Texto para url">
             </div>
-
-
-
             <div style="margin-top: 20px;" class="row justify-content-center form-group">
-                <button id="editar" class="btn btn-primary col-4">Editar</button>
+                <button id="crear" class="btn btn-primary col-4">Editar</button>
                 <button id="cancelar" class="btn btn-danger  col-4 offset-2">Cancelar</button>
             </div>
         </div>
@@ -108,53 +100,101 @@
     
     <script type="text/javascript">
         var id_buscar = "1";
-        $(document).ready(function(){
+        $(()=>{
+            $('#lbl_error').hide();
+        });
+
+        $(document).ready(async function(){
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             id_buscar = urlParams.get('id')
-            let URL = 'http://172.24.41.218:8080/evento/'+id_buscar
-            fetch(URL)
+            let urlBase = 'http://172.24.41.218:8080/'
+            let URL = urlBase+'concurso/'+id_buscar
+            await fetch(URL)
             .then(response=> {
                 if(!response.ok){
                     throw Error(response.statusText);
                 }
                 return response.json();
             })
-            .then(evento=>{
-                document.getElementById('NombredelEvento').value = evento.name;
-                document.getElementById('categoria').value = evento.categoria;
-                document.getElementById('lugar').value = evento.lugar;
-                document.getElementById('direccion').value = evento.direccion;
-                document.getElementById('fecha_inicio').value = evento.fecha_inicio;
-                document.getElementById('fecha_fin').value = evento.fecha_fin;
-                document.getElementById('tipo_evento').value = evento.tipo_evento;
+            .then(concurso=>{
+                // console.log(concurso.path_banner);
+                document.getElementById('NombredelConcurso').value = concurso.nombre;
+                document.getElementById('banner').src = concurso.path_banner;
+                document.getElementById('valor_premio').value = concurso.valor_premio;
+                document.getElementById('guion').value = concurso.guion;
+                document.getElementById('fecha_inicio').value = concurso.fecha_inicio;
+                document.getElementById('fecha_fin').value = concurso.fecha_fin;
+                document.getElementById('recomendaciones').value = concurso.recomendaciones;
+                document.getElementById('url_texto').value = concurso.url.split('=').pop().replaceAll('-',' ');
             })
-            .catch(error => console.log(error) )
+            .catch(err => console.error(err) );
         });
+
+
+        function getBase64(file) {
+			return new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.readAsDataURL(file);
+				reader.onload = () => resolve(reader.result);
+				reader.onerror = error => reject(error);
+            });
+        }
+
         $("#cancelar").click(()=>{
-            location.href = 'Listar_event.html';
+            location.href = 'Listar_concursos.html';
         });
-        $("#editar").click(()=>{
-            let URL = 'http://172.24.41.218:8080/evento/'+id_buscar
-            fetch(URL, {
-                method: 'PUT',
+        $("#crear").click( async function(){
+            var input = document.querySelector('input[type="file"]')
+            if(document.getElementById('NombredelConcurso').value === '')
+            {   
+                $('#lbl_error').show();
+                return
+            }
+            if(document.getElementById('valor_premio').value === '')
+            {   
+                $('#lbl_error').show();
+                return
+            }
+            if(document.getElementById('guion').value === '')
+            {   
+                $('#lbl_error').show();
+                return
+            }
+            if(document.getElementById('recomendaciones').value === '')
+            {   
+                $('#lbl_error').show();
+                return
+            }
+            const file = input.files[0];
+            var archivo ='';
+            
+            await getBase64(file).then(
+                data => {archivo = data;}
+				);
+            console.log(archivo);
+
+            await fetch('http://172.24.41.218:8080/concursos', {
+                method: 'POST',
                 headers: {
                     "Content-type": "application/json"
                 },
                 body: JSON.stringify({
-                    name : document.getElementById('NombredelEvento').value,
-                    categoria : document.getElementById('categoria').value,
-                    lugar : document.getElementById('lugar').value,
-                    direccion : document.getElementById('direccion').value,
+                    id_admin: localStorage.getItem('user_loged'),
+                    nombre : document.getElementById('NombredelConcurso').value,
+                    path_banner : archivo,
+                    valor_premio : document.getElementById('valor_premio').value,
+                    guion : document.getElementById('guion').value,
                     fecha_inicio : document.getElementById('fecha_inicio').value,
                     fecha_fin : document.getElementById('fecha_fin').value,
-                    tipo_evento : document.getElementById('tipo_evento').value 
+                    recomendaciones : document.getElementById('recomendaciones').value ,
+                    url : document.getElementById('url_texto').value.replaceAll(' ','-')
                 })
             })
             .then(response=> response.json())
             .then(usuario =>{
-                alert("Evento editado satisfactoriamente");
-                location.href = 'Listar_event.html';
+                alert("Evento creado satisfactoriamente");
+                location.href = 'Listar_concursos.html';
             })
             .catch(function(err) {
             console.log(err);
@@ -188,4 +228,4 @@
         
     </script>
 </body>
-
+</html>
